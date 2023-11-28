@@ -3,10 +3,15 @@ from tkinter import messagebox
 from random import choice, randint, shuffle
 import pyperclip
 import json
+from pygame import mixer
 
 BACKGROUND = "#9BBEC8"
 BUTTON_BG = "#427D9D"
 HOVER_BUTTON = "#435585"
+
+
+mixer.init()
+sound = mixer.Sound("mouse_click.mp3")
 
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
@@ -53,8 +58,16 @@ def save_new_credentials():
         is_ok = messagebox.askokcancel(title=website, message="It's ok to save the data?")
 
         if is_ok:
+            with open("pass_data.json", "r") as file:
+                # read old data
+                data = json.load(file)
+                # update data
+                data.update(new_data)
+
             with open("pass_data.json", "w") as file:
-                json.dump(new_data, file, indent=4)
+                # save updated data
+                json.dump(data, file, indent=4)
+
             # clear the entries (not the email entry)
             website_entry.delete(0, END)
             password_entry.delete(0, END)
@@ -113,11 +126,11 @@ def not_hovering(e):
 
 
 generate_button = Button(text="Generate Password", activebackground=BACKGROUND, bg=BUTTON_BG, fg="white",
-                         command=generate_pass)
+                         command=lambda: [generate_pass(),sound.play()])
 generate_button.grid(column=2, row=3)
 
 add_button = Button(text="Add", width=44, activebackground=BACKGROUND, bg=BUTTON_BG, fg="white",
-                    command=save_new_credentials)
+                    command=lambda: [sound.play(), save_new_credentials()])
 add_button.grid(column=1, row=4, columnspan=2)
 
 # ------------------behaviour of buttons when the cursor is hovering and out-------------------------- #
