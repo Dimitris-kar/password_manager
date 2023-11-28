@@ -54,7 +54,7 @@ def save_new_credentials():
 
         if is_ok:
             with open("pass_data.json", "w") as file:
-                json.dump(new_data, file)
+                json.dump(new_data, file, indent=4)
             # clear the entries (not the email entry)
             website_entry.delete(0, END)
             password_entry.delete(0, END)
