@@ -8,7 +8,7 @@ BACKGROUND = "#9BBEC8"
 BUTTON_BG = "#427D9D"
 HOVER_BUTTON = "#435585"
 
-# ------------just another line --------------------- #
+
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_pass():
     letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
