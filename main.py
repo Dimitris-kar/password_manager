@@ -81,6 +81,21 @@ def save_new_credentials():
                 messagebox.showinfo(title="Save data", message="The new entries have been saved!")
 
 
+# ---------------------------- SEARCH --------------------------------- #
+def search_website():
+    try:
+        with open("pass_data.json") as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        messagebox.showinfo(title="No file", message="There is any saved password!")
+    else:
+        website = website_entry.get()  # get what the user enters
+        if website in data:
+            messagebox.showinfo(title=website,
+                                message=f"EMAIL: {data[website]['email']}\n\nPASSWORD: {data[website]['password']}")
+        else:
+            messagebox.showinfo(title="No found", message=f"No details for {website} exists.")
+
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
 window.title("Password Manager")
@@ -91,7 +106,7 @@ locker_image = PhotoImage(file="logo.png")
 canvas.create_image(100, 100, image=locker_image)
 pass_text = canvas.create_text(100, 80, text="Password Generator", font=("Courier", 7, "normal"))
 canvas.grid(column=1, row=0)
-# intro_sound.play()  # play the intro sound
+intro_sound.play()  # play the intro sound
 # -------------------------------------Labels Configuration---------------------------------------- #
 website_label = Label(text="Website:", bg=BACKGROUND)
 website_label.grid(column=0, row=1, sticky=E)
@@ -103,7 +118,7 @@ password_label = Label(text="Password:", bg=BACKGROUND)
 password_label.grid(column=0, row=3, sticky=E)
 
 # -----------------------------------Entries Configuration---------------------------------------- #
-website_entry = Entry(width=52)
+website_entry = Entry(width=33)
 website_entry.focus()
 website_entry.grid(column=1, row=1, columnspan=2)
 
@@ -122,6 +137,8 @@ def hovering(e):
         generate_button["bg"] = HOVER_BUTTON
     elif butt == "!button2":
         add_button["bg"] = HOVER_BUTTON
+    elif butt == "!button3":
+        search_button["bg"] = HOVER_BUTTON
 
 
 def not_hovering(e):
@@ -130,6 +147,8 @@ def not_hovering(e):
         generate_button["bg"] = BUTTON_BG
     elif butt == "!button2":
         add_button["bg"] = BUTTON_BG
+    elif butt == "!button3":
+        search_button["bg"] = BUTTON_BG
 
 
 generate_button = Button(text="Generate Password", activebackground=BACKGROUND, bg=BUTTON_BG, fg="white",
@@ -140,10 +159,15 @@ add_button = Button(text="Add", width=44, activebackground=BACKGROUND, bg=BUTTON
                     command=lambda: [click_sound.play(), save_new_credentials()])
 add_button.grid(column=1, row=4, columnspan=2)
 
+search_button = Button(text="Search", activebackground=BACKGROUND, bg=BUTTON_BG, fg="white",
+                       command=lambda: [click_sound.play(), search_website()])
+search_button.grid(column=2, row=1)
+
 # ------------------behaviour of buttons when the cursor is hovering and out-------------------------- #
 add_button.bind_all("<Enter>", hovering)
 add_button.bind("<Leave>", not_hovering)
 generate_button.bind("<Enter>", hovering)
 generate_button.bind("<Leave>", not_hovering)
-
+search_button.bind("<Enter>", hovering)
+search_button.bind("<Leave>", not_hovering)
 window.mainloop()
