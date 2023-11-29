@@ -9,9 +9,10 @@ BACKGROUND = "#9BBEC8"
 BUTTON_BG = "#427D9D"
 HOVER_BUTTON = "#435585"
 
-
+# insert sound effects using pygame mixer
 mixer.init()
-sound = mixer.Sound("mouse_click.mp3")
+click_sound = mixer.Sound("mouse_click.mp3")
+intro_sound = mixer.Sound("intro_sound.mp3")
 
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
@@ -58,33 +59,39 @@ def save_new_credentials():
         is_ok = messagebox.askokcancel(title=website, message="It's ok to save the data?")
 
         if is_ok:
-            with open("pass_data.json", "r") as file:
-                # read old data
-                data = json.load(file)
-                # update data
+
+            try:
+                with open("pass_data.json", "r") as file:
+                    data = json.load(file)  # read old data(if exist)
+
+            except FileNotFoundError:
+                with open("pass_data.json", "w") as file:
+                    # save updated data
+                    json.dump(new_data, file, indent=4)
+            else:
                 data.update(new_data)
+                with open("pass_data.json", "w") as file:
+                    # save updated data
+                    json.dump(data, file, indent=4)
 
-            with open("pass_data.json", "w") as file:
-                # save updated data
-                json.dump(data, file, indent=4)
-
-            # clear the entries (not the email entry)
-            website_entry.delete(0, END)
-            password_entry.delete(0, END)
-        messagebox.showinfo(title="Save data", message="The new entries have been saved!")
+            finally:
+                # clear the entries (not the email entry)
+                website_entry.delete(0, END)
+                password_entry.delete(0, END)
+                messagebox.showinfo(title="Save data", message="The new entries have been saved!")
 
 
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
 window.title("Password Manager")
-window.config(padx=20, pady=20, bg=BACKGROUND)
+window.config(padx=20, pady=20, bg=BACKGROUND, borderwidth=2, relief="groove")
 # Canvas setup to display lock image
 canvas = Canvas(window, width=200, height=200, bg=BACKGROUND, highlightthickness=0)
 locker_image = PhotoImage(file="logo.png")
 canvas.create_image(100, 100, image=locker_image)
 pass_text = canvas.create_text(100, 80, text="Password Generator", font=("Courier", 7, "normal"))
 canvas.grid(column=1, row=0)
-
+# intro_sound.play()  # play the intro sound
 # -------------------------------------Labels Configuration---------------------------------------- #
 website_label = Label(text="Website:", bg=BACKGROUND)
 website_label.grid(column=0, row=1, sticky=E)
@@ -126,11 +133,11 @@ def not_hovering(e):
 
 
 generate_button = Button(text="Generate Password", activebackground=BACKGROUND, bg=BUTTON_BG, fg="white",
-                         command=lambda: [generate_pass(),sound.play()])
+                         command=lambda: [generate_pass(), click_sound.play()])
 generate_button.grid(column=2, row=3)
 
 add_button = Button(text="Add", width=44, activebackground=BACKGROUND, bg=BUTTON_BG, fg="white",
-                    command=lambda: [sound.play(), save_new_credentials()])
+                    command=lambda: [click_sound.play(), save_new_credentials()])
 add_button.grid(column=1, row=4, columnspan=2)
 
 # ------------------behaviour of buttons when the cursor is hovering and out-------------------------- #
