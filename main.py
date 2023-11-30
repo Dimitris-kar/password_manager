@@ -14,7 +14,7 @@ mixer.init()
 click_sound = mixer.Sound("mouse_click.mp3")
 intro_sound = mixer.Sound("intro_sound.mp3")
 
-
+# -----------------another line ------------------------- #
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_pass():
     letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
